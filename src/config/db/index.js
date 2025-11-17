@@ -7,7 +7,10 @@ module.exports = async function connectDB() {
 
     // Extract database name from URL (remove query parameters)
     const dbName = mongoUrl.split("/").pop().split("?")[0];
-
+    if (!mongoUrl) {
+      console.error("ENV MONGO_URL_ATLAS chưa được set!");
+      process.exit(1); // crash có chủ đích, Render sẽ báo lỗi rõ
+    }
     mongoose.set("strictQuery", true);
     await mongoose.connect(mongoUrl, {
       dbName: dbName,
