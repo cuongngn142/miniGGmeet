@@ -12,13 +12,10 @@ const app = express()
 const server = http.createServer(app)
 const io = initSocket(server)
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8080
 
 // Kết nối MongoDB
-connectDB().catch((err) => {
-  console.error('Không thể kết nối MongoDB:', err)
-  process.exit(1)
-})
+connectDB();
 
 // Thiết lập view engine EJS
 app.set('views', path.join(__dirname, 'src', 'resources', 'views'))

@@ -3,16 +3,6 @@ const router = express.Router()
 const User = require('../../../models/User')
 const MeetingRoom = require('../../../models/MeetingRoom')
 
-/**
- * VIEW ROUTES
- * These routes only render EJS templates (Server-Side Rendering)
- * All POST actions use REST API at /api/v1/*
- */
-
-// ============================================
-// PUBLIC PAGES
-// ============================================
-
 // Home page
 router.get('/', (req, res) => {
 	const user = req.session.user || null
@@ -28,10 +18,6 @@ router.get('/auth/register', (req, res) => {
 	res.render('auth-register')
 })
 
-// ============================================
-// AUTHENTICATED PAGES
-// ============================================
-
 // Middleware to check authentication
 const requireAuth = (req, res, next) => {
 	if (!req.session.user) {
@@ -39,20 +25,6 @@ const requireAuth = (req, res, next) => {
 	}
 	next()
 }
-
-// Friends page
-router.get('/friends', requireAuth, async (req, res) => {
-	try {
-		const user = req.session.user
-		const me = await User.findById(user.id)
-			.populate('friendRequests', 'displayName email')
-			.populate('friends', 'displayName email')
-		res.render('friends', { user, me })
-	} catch (error) {
-		console.error('Error loading friends page:', error)
-		res.status(500).send('Server error')
-	}
-})
 
 // Meeting room view
 router.get('/meeting/:code', requireAuth, async (req, res) => {
